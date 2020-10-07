@@ -1,0 +1,304 @@
+public class ElectrodomesticosApp {
+ 
+    /**
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+   
+        
+        Electrodomestico listaElectrodomesticos[]=new Electrodomestico[10];
+   
+        
+        listaElectrodomesticos[0]=new Electrodomestico(200, 60, 'C', "Verde");
+        listaElectrodomesticos[1]=new Lavadora(150, 30);
+        listaElectrodomesticos[2]=new Television(500, 80, 'E', "negro", 42, false);
+        listaElectrodomesticos[3]=new Electrodomestico();
+        listaElectrodomesticos[4]=new Electrodomestico(600, 20, 'D', "gris");
+        listaElectrodomesticos[5]=new Lavadora(300, 40, 'Z', "blanco", 40);
+        listaElectrodomesticos[6]=new Television(250, 70);
+        listaElectrodomesticos[7]=new Lavadora(400, 100, 'A', "verde", 15);
+        listaElectrodomesticos[8]=new Television(200, 60, 'C', "naranja", 30, true);
+        listaElectrodomesticos[9]=new Electrodomestico(50, 10);
+   
+        
+        double sumaElectrodomesticos=0;
+        double sumaTelevisiones=0;
+        double sumaLavadoras=0;
+   
+        for(int i=0;i<listaElectrodomesticos.length;i++){
+            
+   
+            if(listaElectrodomesticos[i] instanceof Electrodomestico){
+                sumaElectrodomesticos+=listaElectrodomesticos[i].precioFinal();
+            }
+            if(listaElectrodomesticos[i] instanceof Lavadora){
+                sumaLavadoras+=listaElectrodomesticos[i].precioFinal();
+            }
+            if(listaElectrodomesticos[i] instanceof Television){
+                sumaTelevisiones+=listaElectrodomesticos[i].precioFinal();
+            }
+        }
+   
+        //Resultados
+        System.out.println("La suma del precio de los electrodomesticos es de "+sumaElectrodomesticos);
+        System.out.println("La suma del precio de las lavadoras es de "+sumaLavadoras);
+        System.out.println("La suma del precio de las televisiones es de "+sumaTelevisiones);
+   
+    }
+   
+}
+public class Electrodomestico {
+    
+    protected final static String COLOR_DEF="blanco";
+   
+    
+    protected final static char CONSUMO_ENERGETICO_DEF='F';
+   
+    
+    protected final static double PRECIO_BASE_DEF=100;
+   
+    
+    protected final static double PESO_DEF=5;
+   
+  
+    protected double precioBase;
+   
+    
+    protected String color;
+   
+    
+    protected char consumoEnergetico;
+   
+    
+    protected double peso;
+   
+    
+   
+    private void comprobarColor(String color){
+   
+        
+        String colores[]={"blanco", "negro", "rojo", "azul", "gris"};
+        boolean encontrado=false;
+  
+        for(int i=0;i<colores.length && !encontrado;i++){
+              
+            if(colores[i].equals(color)){
+                encontrado=true;
+            }
+              
+        }
+          
+        if(encontrado){
+            this.color=color;
+        }else{
+            this.color=COLOR_DEF;
+        }
+          
+          
+    }
+      
+   
+     
+    public void comprobarConsumoEnergetico(char consumoEnergetico){
+          
+        if(consumoEnergetico>=65 && consumoEnergetico<=70){
+            this.consumoEnergetico=consumoEnergetico;
+        }else{
+            this.consumoEnergetico=CONSUMO_ENERGETICO_DEF;
+        }
+          
+    }
+   
+    
+    public double getPrecioBase() {
+        return precioBase;
+    }
+    
+    public String getColor() {
+        return color;
+    }
+   
+
+    public char getConsumoEnergetico() {
+        return consumoEnergetico;
+    }
+    
+    public double getPeso() {
+        return peso;
+    }
+   
+    public double precioFinal(){
+        double plus=0;
+        switch(consumoEnergetico){
+            case 'A':
+                plus+=100;
+                break;
+            case 'B':
+                plus+=80;
+                break;
+            case 'C':
+                plus+=60;
+                break;
+            case 'D':
+                plus+=50;
+                break;
+            case 'E':
+                plus+=30;
+                break;
+            case 'F':
+                plus+=10;
+                break;
+        }
+   
+        if(peso>=0 && peso<19){
+            plus+=10;
+        }else if(peso>=20 && peso<49){
+            plus+=50;
+        }else if(peso>=50 && peso<=79){
+            plus+=80;
+        }else if(peso>=80){
+            plus+=100;
+        }
+   
+        return precioBase+plus;
+    }
+   
+   
+    public Electrodomestico(){
+        this(PRECIO_BASE_DEF, PESO_DEF, CONSUMO_ENERGETICO_DEF, COLOR_DEF);
+    }
+   
+    /**
+     * Contructor con 2 parametros
+     * @param precioBase del electrodomestico
+     * @param peso del electrodomestico
+     */
+    public Electrodomestico(double precioBase, double peso){
+        this(precioBase, peso, CONSUMO_ENERGETICO_DEF, COLOR_DEF);
+    }
+   
+    /**
+     * Constructor con 4 parametros
+     * @param precioBase
+     * @param peso
+     * @param consumoEnergetico
+     * @param color
+     */
+    public Electrodomestico(double precioBase, double peso, char consumoEnergetico, String color){
+        this.precioBase=precioBase;
+        this.peso=peso;
+        comprobarConsumoEnergetico(consumoEnergetico);
+        comprobarColor(color);
+    }
+   
+}
+public class Lavadora extends Electrodomestico{
+  
+    
+    private final static int CARGA_DEF=5;
+  
+    
+    private int carga;
+  
+    
+    public int getCarga() {
+        return carga;
+    }
+  
+    
+    public double precioFinal(){
+        
+        double plus=super.precioFinal();
+  
+       
+        if (carga>30){
+            plus+=50;
+        }
+  
+        return plus;
+    }
+  
+    
+    public Lavadora(){
+        this(PRECIO_BASE_DEF, PESO_DEF, CONSUMO_ENERGETICO_DEF, COLOR_DEF, CARGA_DEF);
+    }
+  
+    /**
+     * Constructor con 2 parametros
+     * @param precioBase
+     * @param peso
+     */
+    public Lavadora(double precioBase, double peso){
+        this(precioBase, peso, CONSUMO_ENERGETICO_DEF, COLOR_DEF, CARGA_DEF);
+    }
+  
+    /**
+     * Constructor con 5 parametros
+     * @param precioBase
+     * @param peso
+     * @param consumoEnergetico
+     * @param color
+     * @param carga
+     */
+    public Lavadora(double precioBase, double peso, char consumoEnergetico, String color, int carga){
+        super(precioBase,peso, consumoEnergetico,color);
+        this.carga=carga;
+    }
+}
+public class Television extends Electrodomestico{
+  
+   
+    private final static int RESOLUCION_DEF=20;
+  
+    
+    private int resolucion;
+  
+    
+    private boolean sintonizadorTDT;
+  
+    
+    public double precioFinal(){
+        
+        double plus=super.precioFinal();
+  
+        
+        if (resolucion>40){
+            plus+=precioBase*0.3;
+        }
+        if (sintonizadorTDT){
+            plus+=50;
+        }
+  
+        return plus;
+    }
+  
+    
+    public Television(){
+        this(PRECIO_BASE_DEF, PESO_DEF, CONSUMO_ENERGETICO_DEF, COLOR_DEF, RESOLUCION_DEF, false);
+    }
+  
+    /**
+     * Constructor con 2 parametros
+     * @param precioBase
+     * @param peso
+     */
+    public Television(double precioBase, double peso){
+        this(precioBase, peso, CONSUMO_ENERGETICO_DEF, COLOR_DEF, RESOLUCION_DEF, false);
+    }
+  
+    /**
+     * Contructor con 6 parametros
+     * @param precioBase
+     * @param peso
+     * @param consumoEnergetico
+     * @param color
+     * @param resolucion
+     * @param sintonizadorTDT
+     */
+    public Television(double precioBase, double peso, char consumoEnergetico, String color, int resolucion, boolean sintonizadorTDT){
+        super(precioBase, peso, consumoEnergetico, color);
+        this.resolucion=resolucion;
+        this.sintonizadorTDT=sintonizadorTDT;
+    }
+}
